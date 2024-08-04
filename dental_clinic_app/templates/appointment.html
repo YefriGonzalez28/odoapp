@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Programar Nueva Cita</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.patient_name.label }}
+        {{ form.patient_name() }}
+    </div>
+    <div>
+        {{ form.date.label }}
+        {{ form.date(type="datetime-local") }}
+    </div>
+    <div>
+        {{ form.doctor.label }}
+        {{ form.doctor() }}
+    </div>
+    <div>
+        {{ form.code.label }}
+        {{ form.code() }}
+    </div>
+    <div>
+        {{ form.affiliation.label }}
+        {{ form.affiliation() }}
+    </div>
+    <div>
+        {{ form.phone.label }}
+        {{ form.phone() }}
+    </div>
+    <div>
+        {{ form.subject.label }}
+        {{ form.subject() }}
+    </div>
+    {{ form.submit() }}
+</form>
+{% endblock %}

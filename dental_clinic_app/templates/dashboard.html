@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-container">
+    <div class="sidebar">
+        <h2>Calendario Mensual</h2>
+        <div id="calendar"></div>
+        <h3 class="today-date">{{ today_formatted }}</h3>
+    </div>
+    <div class="main-content">
+        <h1>Panel de Control</h1>
+        <h2>Cronograma del Día</h2>
+        <div class="time-unit-selector">
+            <label for="time-unit">Unidad de tiempo:</label>
+            <select id="time-unit" onchange="updateSchedule(this.value)">
+                <option value="30">30 minutos</option>
+                <option value="60" selected>1 hora</option>
+                <option value="15">15 minutos</option>
+            </select>
+        </div>
+        <table class="schedule" id="daily-schedule">
+            <tr>
+                <th>Hora</th>
+                <th>Código</th>
+                <th>Afiliación</th>
+                <th>Teléfono</th>
+                <th>Nombre</th>
+                <th>Asunto</th>
+            </tr>
+            {% for hour, hour_appointments in daily_schedule %}
+            <tr>
+                <td>{{ hour }}</td>
+                {% if hour_appointments %}
+                {% for appointment in hour_appointments %}
+                <td>{{ appointment.code }}</td>
+                <td>{{ appointment.affiliation }}</td>
+                <td>{{ appointment.phone }}</td>
+                <td>{{ appointment.patient_name }}</td>
+                <td>{{ appointment.subject }}</td>
+                {% endfor %}
+                {% else %}
+                <td colspan="5">Disponible</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 'auto',
+        events: {{ events | tojson | safe }},
+        eventClick: function(info) {
+            alert('Paciente: ' + info.event.title + '\nHora: ' + info.event.start.toLocaleTimeString());
+        }
+    });
+    calendar.render();
+});
+
+function updateSchedule(timeUnit) {
+    console.log("Unidad de tiempo cambiada a: " + timeUnit + " minutos");
+    location.reload();
+}
+</script>
+{% endblock %}
